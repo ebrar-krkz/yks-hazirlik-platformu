@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Konu Kataloğu | SEBA Akademi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1220;--panel:#0f172a;--muted:#94a3b8;--text:#e2e8f0;
+      --brand:#3b82f6;--brand-2:#7c3aed;--glass:rgba(255,255,255,.06);
+      --radius:18px; --border:rgba(255,255,255,.08);
+      --ok:#22c55e; --warn:#f59e0b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;font-family:'Inter',system-ui;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(59,130,246,.18), transparent),
+        radial-gradient(1000px 500px at 110% 10%, rgba(124,58,237,.18), transparent),
+        radial-gradient(900px 500px at 40% 120%, rgba(34,197,94,.08), transparent),
+        var(--bg);
+      color:var(--text);line-height:1.6;
+    }
+    a{text-decoration:none;color:inherit}
+    .container{width:min(1180px,92%);margin-inline:auto}
+
+    .nav{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:saturate(1.2) blur(10px);
+      background:linear-gradient(to bottom, rgba(11,18,32,.92), rgba(11,18,32,.55));
+      border-bottom:1px solid rgba(255,255,255,.06)
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;gap:14px}
+    .brand{display:flex;align-items:center;gap:12px;min-width:max-content}
+    .logo{
+      width:36px;height:36px;border-radius:10px;
+      background:conic-gradient(from 180deg,var(--brand),var(--brand-2));
+      box-shadow:0 0 0 4px rgba(59,130,246,.15)
+    }
+    .nav-links{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:10px 14px;border-radius:12px;
+      border:1px solid var(--border);
+      background:var(--glass);cursor:pointer;font-weight:650;
+      transition:.18s transform, .18s filter, .18s background;
+      user-select:none;
+    }
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+    .btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));border-color:transparent}
+
+    main{padding:40px 0 60px}
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
+      border-radius:var(--radius);
+      border:1px solid var(--border);
+      padding:24px;
+      box-shadow:0 18px 60px rgba(0,0,0,.28);
+      overflow:hidden;
+      position:relative;
+    }
+    .card:before{
+      content:""; position:absolute; inset:-2px;
+      background: radial-gradient(600px 220px at 10% 0%, rgba(59,130,246,.20), transparent 60%),
+                  radial-gradient(620px 260px at 90% 10%, rgba(124,58,237,.18), transparent 60%);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .card > *{position:relative}
+
+    .top{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
+      flex-wrap:wrap; margin-bottom:14px;
+    }
+    h1{margin:0;font-size:28px;letter-spacing:-.3px}
+    .muted{color:var(--muted)}
+    .sub{margin:6px 0 0}
+
+    .controls{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 1.25fr .9fr auto auto;
+      gap:12px;
+      align-items:center;
+    }
+    .field{
+      display:flex;align-items:center;gap:10px;
+      padding:12px 12px;border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+    }
+    .field input,.field select{
+      width:100%;
+      background:transparent; border:0; outline:0;
+      color:var(--text); font-size:14px;
+    }
+    .field select option{color:#0b1220}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 12px;border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      font-weight:700;
+      white-space:nowrap;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background:linear-gradient(135deg,var(--brand),var(--brand-2));
+      box-shadow:0 0 0 4px rgba(59,130,246,.15);
+    }
+    .btn-ghost{background:rgba(255,255,255,.04)}
+
+    .tabs{display:flex;gap:10px;margin:18px 0 10px;flex-wrap:wrap}
+    .tab{
+      padding:10px 14px;border-radius:12px;
+      background:var(--glass);
+      border:1px solid var(--border);
+      cursor:pointer;font-weight:750;
+      transition:.18s transform, .18s background;
+    }
+    .tab:hover{transform:translateY(-1px)}
+    .tab.active{background:linear-gradient(135deg, rgba(59,130,246,.30), rgba(124,58,237,.26))}
+
+    .subjects{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+    @media(max-width:1100px){.controls{grid-template-columns:1fr 1fr auto auto}.subjects{grid-template-columns:1fr 1fr}}
+    @media(max-width:680px){.controls{grid-template-columns:1fr}.subjects{grid-template-columns:1fr}}
+
+    .subject{
+      padding:16px;border-radius:16px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      transition:.18s transform, .18s background, .18s border-color;
+      position:relative;
+      overflow:hidden;
+    }
+    .subject:hover{transform:translateY(-2px);background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+    .subject .head{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+      margin-bottom:6px;
+    }
+    .subject h3{margin:0;font-size:16px;letter-spacing:-.2px}
+    .badge{
+      font-size:12px;font-weight:800;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      white-space:nowrap;
+    }
+    .badge.ok{border-color:rgba(34,197,94,.25);background:rgba(34,197,94,.10)}
+    .badge.warn{border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.10)}
+
+    details{border-radius:14px}
+    summary{
+      list-style:none;
+      cursor:pointer;
+      user-select:none;
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.03);
+      font-weight:750;
+    }
+    summary::-webkit-details-marker{display:none}
+    summary .chev{
+      margin-left:auto;
+      opacity:.9;
+      transform:rotate(0deg);
+      transition:.18s transform;
+      width:20px; height:20px;
+      display:grid; place-items:center;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+    }
+    details[open] summary .chev{transform:rotate(180deg)}
+    .topic-wrap{padding:10px 2px 2px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{
+      padding:8px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.035);
+      font-size:13px;font-weight:650;
+      color:var(--text);
+    }
+
+    .empty{
+      padding:18px;border-radius:16px;
+      border:1px dashed rgba(255,255,255,.18);
+      color:var(--muted);
+      background:rgba(255,255,255,.03);
+      grid-column:1/-1;
+    }
+
+    .footer-note{
+      margin-top:14px;
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .mini{
+      padding:8px 10px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html">
+        <span class="logo"></span>
+        <b>SEBA Akademi</b>
+      </a>
+      <div class="nav-links">
+        <a href="features.html" class="btn">Özellikler</a>
+        <a href="catalog.html" class="btn">Konu Kataloğu</a>
+        <a href="plan.html" class="btn">Fiyatlar</a>
+        <a href="faq.html" class="btn">SSS</a>
+        <a href="login.html" class="btn btn-primary">Giriş Yap</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="card">
+      <div class="top">
+        <div>
+          <h1>Konu Kataloğu</h1>
+          <p class="sub muted">TYT / AYT konularını hızlıca ara, filtrele ve konu listelerini aç-kapat.</p>
+        </div>
+        <div class="pill" id="counterPill" title="Gösterilen ders sayısı">
+          <span class="dot"></span>
+          <span id="counterText">0 ders</span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="field" title="Konu/Ders ara">
+          🔎
+          <input id="search" placeholder="Örn: Paragraf, Üslü Sayılar, Osmanlı, Basınç..." />
+        </div>
+
+        <div class="field" title="Ders filtresi">
+          🧭
+          <select id="subjectFilter">
+            <option value="ALL">Tüm Dersler</option>
+          </select>
+        </div>
+
+        <button class="btn btn-ghost" id="expandAll" type="button">Hepsini Aç</button>
+        <button class="btn btn-ghost" id="collapseAll" type="button">Hepsini Kapat</button>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Sınav Türü">
+        <button class="tab active" id="tab-tyt" role="tab" aria-selected="true">TYT</button>
+        <button class="tab" id="tab-ayt" role="tab" aria-selected="false">AYT</button>
+      </div>
+
+      <div class="tabs" id="ayt-track-tabs" style="display:none;margin-top:8px">
+        <button class="tab active" data-track="SAY">Sayısal</button>
+        <button class="tab" data-track="EA">Eşit Ağırlık</button>
+        <button class="tab" data-track="SOZ">Sözel</button>
+      </div>
+
+      <div id="subjects" class="subjects"></div>
+
+      <div class="footer-note">
+        <span class="mini">💾 Filtreler tarayıcıda hatırlanır</span>
+        <span class="mini">⚡ Arama: ders adı + konu adı birlikte</span>
+        <span class="mini">📌 TYT listesi PDF tablosuna göre</span>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const $ = (s)=>document.querySelector(s);
+    const $$ = (s)=>[...document.querySelectorAll(s)];
+
+    // ✅ EKSİK OLANLAR: AYT Matematik / Geometri listeleri (ReferenceError fix)
+    const AYT_MATEMATIK = [
+      "Temel Kavramlar","Sayı Basamakları","Bölme ve Bölünebilme","EBOB – EKOK","Rasyonel Sayılar",
+      "Basit Eşitsizlikler","Mutlak Değer","Üslü Sayılar","Köklü Sayılar","Çarpanlara Ayırma",
+      "Oran Orantı","Denklem Çözme","Problemler","Kümeler","Kartezyen Çarpım","Mantık","Fonksiyonlar",
+      "Polinomlar","2. Dereceden Denklemler","Permütasyon ve Kombinasyon","Binom ve Olasılık","İstatistik",
+      "Karmaşık Sayılar","2. Dereceden Eşitsizlikler","Parabol","Trigonometri","Logaritma","Diziler",
+      "Limit","Türev","İntegral"
+    ];
+
+    const AYT_GEOMETRI = [
+      "Doğruda ve Üçgende Açılar","Dik ve Özel Üçgenler","Dik Üçgende Trigonometrik Bağıntılar",
+      "İkizkenar ve Eşkenar Üçgen","Üçgende Alanlar","Üçgende Açıortay Bağıntıları",
+      "Üçgende Kenarortay Bağıntıları","Üçgende Eşlik ve Benzerlik","Üçgende Açı–Kenar Bağıntıları",
+      "Çokgenler","Dörtgenler","Yamuk","Paralelkenar","Eşkenar Dörtgen – Deltoid","Dikdörtgen",
+      "Çemberde Açılar","Çemberde Uzunluk","Daire","Prizmalar","Piramitler","Küre",
+      "Koordinat Düzlemi ve Noktanın Analitiği","Doğrunun Analitiği",
+      "Tekrar Eden, Dönen ve Yansıyan Şekiller","Dönüşümlerle Geometri","Trigonometri","Çemberin Analitiği"
+    ];
+
+    // TYT başlıkları
+    const TYT_CATALOG = [
+      { title:"Türkçe", desc:"Anlam, dil bilgisi ve paragraf temelleri.", topics:[
+        "Sözcükte Anlam","Cümlede Anlam","Paragrafta Anlam","Anlatım Biçimleri","Ses Bilgisi","Yazım Kuralları",
+        "Noktalama İşaretleri","Sözcükte Yapı","Sözcük Türleri","Edat–Bağlaç–Ünlem","Fiil–Ek Fiil","Fiilimsi",
+        "Fiilde Çatı","Deyim ve Atasözü","Cümlenin Öğeleri","Cümle Türleri","Anlatım Bozuklukları"
+      ]},
+      { title:"Matematik", desc:"Temel kavramlardan veri analizine kadar TYT matematik çekirdeği.", topics:[
+        "Temel Kavramlar","Sayı Basamakları","Bölme ve Bölünebilme","EBOB–EKOK","Rasyonel Sayılar – Ondalık Sayılar",
+        "Basit Eşitsizlikler","Mutlak Değer","Üslü Sayılar","Köklü Sayılar","Çarpanlara Ayırma","Oran Orantı",
+        "Denklem Çözme","Problemler","Kümeler – Kartezyen Çarpımı","Fonksiyonlar","Permütasyon","Kombinasyon",
+        "Binom","Olasılık","İstatistik","2. Dereceden Denklemler","Karmaşık Sayılar","Polinomlar","Mantık","Veri Analizi"
+      ]},
+      { title:"Geometri", desc:"Üçgenler, çokgenler, dörtgenler, çember ve analitik.", topics:[
+        "Doğruda ve Üçgende Açılar","Üçgende Açı–Kenar Bağıntıları","Üçgende Benzerlik","Üçgende Açıortay–Kenarortay",
+        "Dik Üçgen","İkizkenar Üçgen","Eşkenar Üçgen","Üçgende Alan","Çokgenler","Dörtgenler","Yamuk – Paralelkenar",
+        "Eşkenar Dörtgen","Dikdörtgen","Kare","Deltoid","Çemberde Açı","Çemberde Uzunluk","Dairenin Çevresi ve Alanı",
+        "Doğrunun Analitik İncelenmesi","Çemberin Analitik İncelenmesi",
+        "Katı Cisimler (Prizma, Küp, Piramit, Dikdörtgenler Prizması, Silindir, Küre, Koni)"
+      ]},
+      { title:"Tarih", desc:"Temel dönemler ve inkılap/türkiye tarihi akışı.", topics:[
+        "Tarih Bilimine Giriş","Uygarlığın Doğuşu ve İlk Uygarlıklar","İlk Türk Devletleri","İslam Tarihi ve Uygarlığı",
+        "Türk–İslam Devletleri","Türkler’in İslamiyeti Kabulü","Türkiye Tarihi","Beylikten Devlete (1300–1453)",
+        "Dünya Gücü: Osmanlı Devleti","Osmanlı Duraklama Dönemi","Gerileme Devri (1699–1792)",
+        "Arayış Yılları (17. Yüzyıl)","Avrupa ve Osmanlı Devleti (18. Yüzyıl)","En Uzun Yüzyıl (1800–1922)",
+        "20. Yüzyıl Başlarında Osmanlı Devleti","XIX. YY Osmanlı Devleti","1. Dünya Savaşı – Milli Mücadeleye Hazırlık",
+        "Kurtuluş Savaşında Cepheler","Türk İnkılabı","Atatürkçülük ve Atatürk İlkeleri","Türk Dış Politikası"
+      ]},
+      { title:"Fizik", desc:"Temel fizik kavramları ve TYT düzeyi üniteler.", topics:[
+        "Fizik Bilimine Giriş","Madde ve Özellikleri","Kuvvet ve Hareket","İş, Güç ve Enerji",
+        "Isı, Sıcaklık ve Genleşme","Basınç","Kaldırma Kuvveti","Elektrik ve Manyetizma","Dalgalar","Optik"
+      ]},
+      { title:"Coğrafya", desc:"Doğa-insan, harita, iklim, yer şekilleri ve Türkiye coğrafyası.", topics:[
+        "İnsan ve Doğa","Dünya’nın Şekli ve Hareketleri","Coğrafi Konum","Harita Bilgisi","Atmosfer ve Sıcaklık","İklimler",
+        "Basınç ve Rüzgarlar","Nem, Yağış ve Buharlaşma","İç Kuvvetler / Dış Kuvvetler","Su – Toprak ve Bitkiler",
+        "Nüfus – Göç – Yerleşme","Türkiye’nin Yer Şekilleri","Ekonomik Faaliyetler","Bölgeler ve Ülkeler",
+        "Uluslararası Ulaşım Hatları","Çevre ve Toplum","Doğal Afetler"
+      ]},
+      { title:"Kimya", desc:"Atom, periyodik sistem ve günlük kimya.", topics:[
+        "Kimya Bilimi","Atom ve Periyodik Sistem","Kimyasal Türler Arası Etkileşimler","Maddenin Halleri","Doğa ve Kimya",
+        "Kimyanın Temel Kanunları ve Kimyasal Hesaplamalar","Karışımlar","Asitler–Bazlar ve Tuzlar","Kimya Her Yerde"
+      ]},
+      { title:"Biyoloji", desc:"Hücre, canlılar, üreme, kalıtım, ekosistem.", topics:[
+        "Yaşam Bilimi Biyoloji","Hücre","Canlılar Dünyası","Hücre Bölünmeleri ve Üreme","Kalıtımın Genel İlkeleri",
+        "Ekosistem Ekolojisi ve Güncel Çevre Sorunları"
+      ]},
+      { title:"Felsefe", desc:"Felsefenin alanı ve temel felsefe dalları.", topics:[
+        "Felsefe’nin Alanı","Bilgi Felsefesi","Bilim Felsefesi","Varlık Felsefesi","Ahlak Felsefesi",
+        "Siyaset Felsefesi","Sanat Felsefesi","Din Felsefesi"
+      ]},
+      { title:"Din Kültürü", desc:"İnanç, ibadet, vahiy-akıl, yorumlar ve yaşayan dinler.", topics:[
+        "İnsan ve Din (İnanç)","İbadet","Hz. Muhammed’in Hayatı","Vahiy ve Akıl",
+        "İslam Düşüncesi ve Yorumu","İslamda Değerler, Sanat ve Laiklik","Yaşayan Dinler"
+      ]}
+    ];
+
+    let currentAytTrack = "SAY"; // SAY | EA | SOZ
+
+    const AYT_GROUPS = {
+      SAY: [
+        { title:"Fizik", desc:"AYT Sayısal • Fizik", topics:[
+          "Vektörler","Kuvvet, Tork ve Denge","Kütle Merkezi","Basit Makineler","Hareket",
+          "Newton’un Hareket Yasaları","İş, Güç ve Enerji II","Atışlar","İtme ve Momentum",
+          "Elektrik Alan ve Potansiyel","Paralel Levhalar ve Sığa","Manyetik Alan ve Manyetik Kuvvet",
+          "İndüksiyon, Alternatif Akım ve Transformatörler","Çembersel Hareket","Kütle Çekim ve Kepler Yasaları",
+          "Basit Harmonik Hareket","Dalga Mekaniği ve Elektromanyetik Dalgalar","Atom Modelleri",
+          "Büyük Patlama ve Radyoaktivite","Modern Fizik","Modern Fiziğin Teknolojideki Uygulamaları"
+        ]},
+        { title:"Kimya", desc:"AYT Sayısal • Kimya", topics:[
+          "Modern Atom Teorisi","Gazlar","Sıvı Çözeltiler ve Çözünürlük","Kimyasal Tepkimelerde Enerji",
+          "Tepkimelerde Hız ve Denge","Kimya ve Elektrik","Karbon Kimyası","Organik Kimya","Enerji Kaynakları ve Bilimsel Gelişmeler"
+        ]},
+        { title:"Biyoloji", desc:"AYT Sayısal • Biyoloji", topics:[
+          "Sinir Sistemi","Endokrin Sistem","Duyu Organları","Destek ve Hareket Sistemi","Sindirim Sistemi",
+          "Dolaşım ve Bağışıklık Sistemi","Solunum Sistemi","Üriner Sistem","Üreme Sistemi ve Embriyonik Gelişim",
+          "Komünite ve Popülasyon Ekolojisi","Nükleik Asitler","Genetik Şifre ve Protein Sentezi",
+          "Canlılık ve Enerji","Fotosentez ve Kemosentez","Hücresel Solunum","Bitki Biyolojisi","Canlılar ve Çevre"
+        ]},
+        { title:"Matematik", desc:"AYT Sayısal • Matematik", topics: AYT_MATEMATIK },
+        { title:"Geometri", desc:"AYT Sayısal • Geometri", topics: AYT_GEOMETRI },
+      ],
+      EA: [
+        { title:"Edebiyat", desc:"AYT Eşit Ağırlık • Edebiyat", topics:[
+          "Anlam Bilgisi (Sözcükte, Cümlede ve Paragrafta Anlam)","Edebî Bilgiler (Şiir Bilgisi)","Edebî Bilgiler (Düzyazı Türleri)",
+          "İslamiyet Öncesi Türk Edebiyatı","İslami Dönem İlk Dil ve Edebiyat Ürünleri","Divan Edebiyatı","Halk Edebiyatı","Edebî Akımlar",
+          "Tanzimat Edebiyatı","Servetifûnun Edebiyatı","Fecr-i Ati Edebiyatı","Milli Edebiyat","Cumhuriyet Şiiri","Cumhuriyet Romanı",
+          "Cumhuriyet Dönemi","Dünya Edebiyatı","Çağdaş Türk Edebiyatı","Eser Özetleri"
+        ]},
+        { title:"Tarih-1", desc:"AYT Eşit Ağırlık • Tarih-1", topics:[
+          "Tarih Bilimine Giriş","İlk Çağ Medeniyetleri","İslam Öncesi Türk Tarihi","İslam Tarihi ve Medeniyeti","İlk Türk İslam Devletleri",
+          "Türkiye Tarihi","Orta Çağ’da Avrupa","Beylikten Devlete","Dünya Gücü: Osmanlı Devleti","Arayış Yılları","Yeni ve Yakın Çağ’da Avrupa",
+          "Yüzyıl Değişim ve Diploması","En Uzun Yüzyıl","Osmanlı Kültür ve Medeniyeti","Yüzyıl Başlarında Osmanlı Devleti","Birinci Dünya Savaşı",
+          "İnkılap Tarihi (Tüm Konular)","Yüzyıl Başlarında Dünya","İkinci Dünya Savaşı","Soğuk Savaş Dönemi","Yumuşama Dönemi","Küreselleşen Dünya"
+        ]},
+        { title:"Coğrafya-1", desc:"AYT Eşit Ağırlık • Coğrafya-1", topics:[
+          "Beşeri Sistemler","Mekansal Bir Sentez: Türkiye","Türkiye’de Tarım ve Hayvancılık","Türkiye’nin Bölgeleri ve Bölgesel Kalkınma Projeleri",
+          "Küresel Ortam: Bölgeler ve Ülkeler","Ülkeler Coğrafyası","Ekosistem ve Madde Döngüleri","Çevre ve İnsan","Doğal Afetler"
+        ]},
+        { title:"Matematik", desc:"AYT Eşit Ağırlık • Matematik", topics: AYT_MATEMATIK },
+        { title:"Geometri", desc:"AYT Eşit Ağırlık • Geometri", topics: AYT_GEOMETRI },
+      ],
+      SOZ: [
+        { title:"Edebiyat", desc:"AYT Sözel • Edebiyat", topics:[
+          "Güzel Sanatlar ve Edebiyat","Metinlerin Sınıflandırılması","Şiir Bilgisi","Söz Sanatları","İslamiyet Öncesi Türk Edebiyatı",
+          "İslami Dönem Türk Edebiyatı","Halk Edebiyatı","Divan Edebiyatı","Edebi Akımlar","Tanzimat Edebiyatı","Servet-i Fünun Edebiyatı",
+          "Fecr-i Âti Edebiyatı","Milli Edebiyat","Cumhuriyet Dönemi Türk Edebiyatı","Batı Edebiyatı"
+        ]},
+        { title:"Tarih-1/2", desc:"AYT Sözel • Tarih", topics:[
+          "Tarih Bilimine Giriş","Uygarlığın Doğuşu ve İlk Çağ Uygarlıkları","İlk Türk Devletleri","İslam Tarihi ve Uygarlığı","Türk–İslam Devletleri",
+          "Türkiye Tarihi (10–13. Y.Y)","Beylikten Devlete (Kuruluş Dönemi)","Dünya Gücü: Osmanlı Devleti (Yükselme Dönemi)",
+          "Osmanlı Devleti’nin Kültür ve Uygarlığı","Yeni Çağ Avrupa Tarihi","Arayış Yılları (Duraklama Dönemi)","18. YY Değişim ve Diplomasi (Gerileme Dönemi)",
+          "Yakın Çağ Avrupa Tarihi","En Uzun Yüzyıl (Dağılma Dönemi)","Mustafa Kemal Atatürk’ün Hayatı","Milli Mücadele’nin Hazırlık Dönemi",
+          "Kurtuluş Savaşında Cepheler","Türk İnkılabı","Atatürkçülük ve Atatürk İlkeleri","XX. Yüzyıl Başlarında Dünya","II. Dünya Savaşı (1939–1945)",
+          "Soğuk Savaş Dönemi","Yumuşama (Detant) Dönemi ve Sonrası","Küreselleşen Dünya","Türklerde Devlet Teşkilatı","Türklerde Toplum Yapısı",
+          "Türklerde Hukuk","Türklerde Ekonomi","Türklerde Eğitim","Türklerde Sanat"
+        ]},
+        { title:"Coğrafya-1/2", desc:"AYT Sözel • Coğrafya", topics:[
+          "Doğal Sistemler","Beşeri Sistemler","Mekansal Bir Sentez: Türkiye","Küresel Ortam: Bölgeler ve Ülkeler",
+          "Ülkeler ve Uluslararası Örgütler","Çevre ve Toplum"
+        ]},
+        { title:"Felsefe", desc:"AYT Sözel • Felsefe", topics:[
+          "Felsefenin Alanı","Bilgi Felsefesi","Bilim Felsefesi","Varlık Felsefesi","Ahlak Felsefesi","Siyaset Felsefesi","Sanat Felsefesi","Din Felsefesi"
+        ]},
+        { title:"Mantık", desc:"AYT Sözel • Mantık", topics:["Mantığa Giriş","Klasik Mantık","Mantık ve Dil","Sembolik Mantık"]},
+        { title:"Psikoloji", desc:"AYT Sözel • Psikoloji", topics:["Psikoloji Bilimini Tanıyalım","Psikolojinin Temel Süreçleri","Öğrenme Bellek Düşünme","Ruh Sağlığının Temelleri"]},
+        { title:"Din Kültürü", desc:"AYT Sözel • Din Kültürü", topics:[
+          "Kur’an-ı Kerim’in Anlaşılması ve Kavranması","İnsan ve Din","İslam ve İbadetler","İslam Düşüncesinde Yorumlar, Mezhepler",
+          "Muhammed’in Hayatı, Örnekliği ve Onu Anlama","İslam ve Bilim, Estetik, Barış","Yaşayan Dinler ve Benzer Özellikleri"
+        ]},
+      ]
+    };
+
+    // State
+    const subjectsEl = $("#subjects");
+    const searchEl = $("#search");
+    const filterEl = $("#subjectFilter");
+    const counterText = $("#counterText");
+
+    const STORAGE_KEY = "seba_catalog_state_v1";
+    let currentExam = "TYT";
+    let openAll = false;
+
+    function loadState(){
+      try{
+        const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        if(s.currentAytTrack) currentAytTrack = s.currentAytTrack;
+        if(s.currentExam) currentExam = s.currentExam;
+        if(typeof s.search === "string") searchEl.value = s.search;
+        if(typeof s.filter === "string") filterEl.value = s.filter;
+      }catch(e){}
+    }
+    function saveState(){
+      const state = { currentExam, currentAytTrack, search: searchEl.value, filter: filterEl.value };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function getCatalog(){
+      if(currentExam === "TYT") return TYT_CATALOG;
+      return AYT_GROUPS[currentAytTrack] || [];
+    }
+
+    function escapeHtml(str){
+      return String(str).replace(/[&<>"']/g, m => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    function normalize(s){
+      return (s||"").toString().toLowerCase().trim();
+    }
+
+    function buildFilterOptions(){
+      const data = getCatalog();
+      const options = data.map(x => x.title);
+      const current = filterEl.value || "ALL";
+      filterEl.innerHTML = `<option value="ALL">Tüm Dersler</option>` +
+        options.map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join("");
+      if(options.includes(current)) filterEl.value = current;
+      else filterEl.value = "ALL";
+    }
+
+    function matches(subject, q){
+      if(!q) return true;
+      const hay = normalize(subject.title + " " + subject.desc + " " + (subject.topics||[]).join(" "));
+      return hay.includes(q);
+    }
+
+    function chipList(topics, q){
+      if(!topics?.length) return "";
+      const nq = normalize(q);
+      const filtered = !nq ? topics : topics.filter(t => normalize(t).includes(nq));
+      if(!filtered.length){
+        return `<div class="muted" style="padding:6px 4px 2px">Bu aramaya uygun konu bulunamadı.</div>`;
+      }
+      return `<div class="chips">` + filtered.map(t => `<span class="chip">${escapeHtml(t)}</span>`).join("") + `</div>`;
+    }
+
+    function subjectCard(subject, q){
+      const topicCount = subject.topics?.length || 0;
+      const badgeClass = topicCount >= 15 ? "ok" : (topicCount >= 8 ? "warn" : "");
+      return `
+        <article class="subject">
+          <div class="head">
+            <div>
+              <h3>${escapeHtml(subject.title)}</h3>
+              <div class="muted" style="font-size:13px;margin-top:4px">${escapeHtml(subject.desc || "")}</div>
+            </div>
+            <span class="badge ${badgeClass}">${topicCount} konu</span>
+          </div>
+
+          <details ${openAll ? "open" : ""}>
+            <summary>
+              Konuları Göster
+              <span class="chev">⌄</span>
+            </summary>
+            <div class="topic-wrap">
+              ${chipList(subject.topics, q)}
+            </div>
+          </details>
+        </article>
+      `;
+    }
+
+    function render(){
+      const q = normalize(searchEl.value);
+      const filter = filterEl.value;
+
+      let data = getCatalog();
+
+      if(filter && filter !== "ALL"){
+        data = data.filter(s => s.title === filter);
+      }
+
+      const shown = data.filter(s => matches(s, q));
+      counterText.textContent = `${shown.length} ders`;
+
+      if(!shown.length){
+        subjectsEl.innerHTML = `
+          <div class="empty">
+            <b>Sonuç yok.</b><br>
+            Aramayı değiştir veya “Tüm Dersler” seçip tekrar dene.
+          </div>
+        `;
+        return;
+      }
+
+      subjectsEl.innerHTML = shown.map(s => subjectCard(s, q)).join("");
+    }
+
+    // AYT alt tabs
+    const aytTabsEl = document.getElementById("ayt-track-tabs");
+
+    function syncAytTabsVisibility(){
+      if(!aytTabsEl) return;
+      aytTabsEl.style.display = (currentExam === "AYT") ? "flex" : "none";
+    }
+
+    if(aytTabsEl){
+      aytTabsEl.addEventListener("click", (e)=>{
+        const btn = e.target.closest("button[data-track]");
+        if(!btn) return;
+
+        currentAytTrack = btn.dataset.track;
+
+        [...aytTabsEl.querySelectorAll(".tab")].forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+
+        buildFilterOptions();
+        render();
+        saveState();
+      });
+    }
+
+    function setTab(exam){
+      currentExam = exam;
+
+      $("#tab-tyt").classList.toggle("active", exam==="TYT");
+      $("#tab-ayt").classList.toggle("active", exam==="AYT");
+      $("#tab-tyt").setAttribute("aria-selected", exam==="TYT");
+      $("#tab-ayt").setAttribute("aria-selected", exam==="AYT");
+
+      syncAytTabsVisibility();
+      buildFilterOptions();
+      render();
+      saveState();
+    }
+
+    $("#tab-tyt").addEventListener("click", ()=>setTab("TYT"));
+    $("#tab-ayt").addEventListener("click", ()=>setTab("AYT"));
+
+    searchEl.addEventListener("input", ()=>{ render(); saveState(); });
+    filterEl.addEventListener("change", ()=>{ render(); saveState(); });
+
+    $("#expandAll").addEventListener("click", ()=>{
+      openAll = true;
+      $$("details").forEach(d => d.open = true);
+    });
+
+    $("#collapseAll").addEventListener("click", ()=>{
+      openAll = false;
+      $$("details").forEach(d => d.open = false);
+    });
+
+    // Init
+    loadState();
+
+    // AYT track button active sync
+    if(aytTabsEl){
+      [...aytTabsEl.querySelectorAll(".tab")].forEach(b=>{
+        b.classList.toggle("active", b.dataset.track === currentAytTrack);
+      });
+    }
+
+    setTab(currentExam);
+
+    // Eğer daha önce kaydedilmiş filtre yüzünden boş görünürse otomatik toparla:
+    if(!getCatalog().length){
+      currentExam = "TYT";
+      currentAytTrack = "SAY";
+      filterEl.value = "ALL";
+      setTab("TYT");
+    }
+  </script>
+</body>
+</html>

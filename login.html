@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Giriş | AscendEdu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0b1220;--panel:#0f172a;--text:#e2e8f0;--muted:#94a3b8;--brand:#3b82f6;--brand2:#7c3aed}
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui;
+      background:
+        radial-gradient(1100px 520px at 10% -10%,rgba(59,130,246,.15),transparent),
+        radial-gradient(900px 460px at 110% 10%,rgba(124,58,237,.15),transparent),
+        var(--bg);
+      color:var(--text)
+    }
+    .wrap{min-height:100dvh;display:grid;place-items:center;padding:24px}
+    .card{
+      width:min(520px,94%);
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:22px
+    }
+    h1{margin:0 0 6px}
+    .row{display:flex;gap:10px;margin:10px 0}
+    input,button,label{font:inherit}
+    input[type=email],input[type=password]{
+      width:100%;padding:12px 14px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);color:var(--text)
+    }
+    .btn{
+      padding:12px 16px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.06);
+      font-weight:600;cursor:pointer
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--brand),var(--brand2));
+      border-color:transparent
+    }
+    .muted{color:var(--muted)}
+    .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    a{color:#c7d2fe;text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <h1>Giriş</h1>
+        <a href="index.html">← Anasayfa</a>
+      </div>
+      <p class="muted">Rolünü seç ve bilgilerinle giriş yap.</p>
+
+      <div class="row">
+        <label class="btn" style="flex:1;display:flex;align-items:center;gap:8px">
+          <input type="radio" name="role" value="student" checked> 🎓 Öğrenci
+        </label>
+        <label class="btn" style="flex:1;display:flex;align-items:center;gap:8px">
+          <input type="radio" name="role" value="admin"> 🧑‍💼 Yönetici
+        </label>
+      </div>
+
+      <div class="row">
+        <input id="email" type="email" placeholder="E-posta" autocomplete="username">
+      </div>
+      <div class="row">
+        <input id="pass" type="password" placeholder="Şifre" autocomplete="current-password">
+      </div>
+
+      <div class="row" style="justify-content:flex-end">
+        <button class="btn" onclick="window.location='index.html'">Vazgeç</button>
+        <button class="btn btn-primary" id="login">Giriş Yap</button>
+      </div>
+      <p class="muted">Not: Demo modunda doğrulama yok. Rol seçimine göre panele yönlendirilirsin.</p>
+    </div>
+  </div>
+  <script>
+    const $=(s)=>document.querySelector(s);
+    $('#login').addEventListener('click',()=>{
+      const role=[...document.querySelectorAll('input[name=role]')].find(r=>r.checked)?.value||'student';
+      const email=$('#email').value.trim();
+      const pass=$('#pass').value.trim();
+      if(!email||!pass){alert('E-posta ve şifre gerekli.');return}
+      localStorage.setItem('loggedIn','1');
+      localStorage.setItem('role',role);
+      if(!localStorage.getItem('plan')) localStorage.setItem('plan','none');
+      location.href = role==='admin' ? 'admin_dashboard.html' : 'student_dashboard.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEBA Akademi | YKS Platformu</title>
+  <meta name="description" content="TYT/AYT video dersler, konu testleri, deneme analizi ve kişisel çalışma planı ile modern YKS hazırlık platformu." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f172a;
+      --muted:#94a3b8;
+      --text:#e2e8f0;
+      --brand:#3b82f6;
+      --brand-2:#7c3aed;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --glass:rgba(255,255,255,.06);
+      --radius:18px;
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --shadow-soft:0 6px 18px rgba(0,0,0,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(59,130,246,.18), transparent),
+        radial-gradient(1000px 500px at 110% 10%, rgba(124,58,237,.18), transparent),
+        var(--bg);
+      color:var(--text);
+      line-height:1.6;
+    }
+    a{color:inherit; text-decoration:none}
+    .container{width:min(1180px, 92%); margin-inline:auto}
+
+    /* NAV */
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter:saturate(1.2) blur(8px);
+      background:linear-gradient(to bottom,
+        rgba(11,18,32,.95),
+        rgba(11,18,32,.65));
+      border-bottom:1px solid rgba(255,255,255,.06)
+    }
+    .nav-inner{display:flex; align-items:center; justify-content:space-between; height:72px}
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{
+      width:36px; height:36px; border-radius:10px;
+      background:conic-gradient(from 200deg, var(--brand), var(--brand-2), var(--brand));
+      box-shadow:0 0 0 4px rgba(59,130,246,.15)
+    }
+    .brand b{font-weight:800; letter-spacing:0.2px}
+    .nav-links{display:flex; gap:16px; align-items:center}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:10px 14px; border-radius:12px;
+      font-weight:600; border:1px solid rgba(255,255,255,.08);
+      background:var(--glass); transition:.2s; cursor:pointer;
+      font-size:14px;
+    }
+    .btn:hover{transform:translateY(-1px); box-shadow:var(--shadow-soft)}
+    .btn-primary{background:linear-gradient(135deg, var(--brand), var(--brand-2)); border-color:transparent}
+    .btn-outline{background:transparent}
+    .mobile-toggle{display:none}
+
+    /* HERO */
+    .hero{
+      position:relative;
+      padding:96px 0 60px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:40px;
+      align-items:center;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 12px; border-radius:999px;
+      background:rgba(34,197,94,.12); color:#bbf7d0;
+      border:1px solid rgba(34,197,94,.25);
+      font-weight:600; font-size:14px;
+    }
+    .badge span{
+      display:inline-flex; align-items:center; justify-content:center;
+      width:22px; height:22px; border-radius:999px;
+      background:rgba(34,197,94,.22); font-size:12px;
+    }
+    .hero h1{
+      font-size:clamp(30px, 4.4vw, 56px);
+      line-height:1.05;
+      margin:16px 0 14px;
+      font-weight:800;
+    }
+    .hero h1 span{
+      background:linear-gradient(90deg,var(--brand),var(--brand-2));
+      -webkit-background-clip:text; background-clip:text; color:transparent
+    }
+    .hero p{color:var(--muted); margin:0 0 26px; max-width:520px}
+    .hero-cta{display:flex; gap:12px; flex-wrap:wrap}
+    .hero-meta{
+      display:flex; gap:16px; flex-wrap:wrap;
+      margin-top:14px; font-size:13px; color:var(--muted);
+    }
+    .hero-meta span{display:inline-flex; align-items:center; gap:6px}
+    .hero-meta i{
+      width:18px; height:18px; border-radius:999px;
+      display:inline-flex; align-items:center; justify-content:center;
+      background:rgba(148,163,184,.14); font-size:11px;
+    }
+
+    /* HERO RIGHT PREVIEW */
+    .hero-preview{
+      position:relative;
+      display:grid;
+      gap:14px;
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .screen{
+      aspect-ratio:16/10;
+      border-radius:16px;
+      overflow:hidden;
+      position:relative;
+      background:
+        radial-gradient(120% 140% at 0% 0%, rgba(56,189,248,.34), transparent 55%),
+        radial-gradient(120% 160% at 100% 0%, rgba(129,140,248,.4), transparent 60%),
+        radial-gradient(100% 120% at 50% 120%, rgba(56,189,248,.25), rgba(15,23,42,1));
+    }
+    .screen-grid{
+      position:absolute; inset:16px;
+      display:grid; grid-template-columns:1.4fr 1fr; gap:12px;
+      font-size:12px;
+    }
+    .screen-card{
+      background:rgba(15,23,42,.86);
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,.35);
+      padding:10px 12px;
+      backdrop-filter:blur(6px);
+    }
+    .screen-card h4{margin:0 0 4px; font-size:13px}
+    .pill-row{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px}
+    .pill{
+      padding:4px 8px; border-radius:999px;
+      background:rgba(15,23,42,.9);
+      border:1px solid rgba(148,163,184,.4);
+      font-size:11px; color:var(--muted);
+    }
+    .progress-wrap{margin-top:6px}
+    .progress-bar{
+      width:100%; height:6px; border-radius:999px;
+      background:rgba(15,23,42,1); overflow:hidden;
+    }
+    .progress-inner{
+      height:100%; border-radius:999px;
+      background:linear-gradient(90deg,var(--brand),var(--brand-2));
+      width:78%;
+    }
+    .mini-card-row{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px;
+    }
+    .mini-card{
+      border-radius:10px;
+      background:rgba(15,23,42,.78);
+      border:1px solid rgba(148,163,184,.35);
+      padding:6px 8px;
+      font-size:11px;
+    }
+    .mini-card span{display:block}
+    .mini-label{color:var(--muted); font-size:10px}
+    .mini-value{font-weight:700}
+
+    .hero-strip{
+      display:flex; gap:10px; align-items:center;
+      padding:10px 14px;
+      border-top:1px solid rgba(148,163,184,.18);
+      font-size:12px; color:var(--muted);
+    }
+    .hero-strip strong{color:var(--text)}
+
+    /* GENERIC SECTIONS */
+    .section{padding:24px 0 60px}
+    .section h2{font-size:clamp(22px, 3vw, 32px); margin:0 0 8px}
+    .section p.lead{color:var(--muted); margin:0 0 26px; max-width:680px}
+
+    /* HIGHLIGHT */
+    .highlight-grid{
+      display:grid; grid-template-columns:2fr 1.5fr; gap:18px;
+    }
+    .highlight-main{
+      position:relative; overflow:hidden;
+      border-radius:var(--radius);
+      background:
+        linear-gradient(145deg, rgba(59,130,246,.35), rgba(124,58,237,.35)),
+        url('https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=1600&auto=format&fit=crop') center/cover;
+      min-height:260px;
+      box-shadow:var(--shadow);
+    }
+    .highlight-overlay{
+      position:absolute; inset:0;
+      background:linear-gradient(135deg, rgba(15,23,42,.9), rgba(15,23,42,.25));
+    }
+    .highlight-content{
+      position:relative;
+      padding:22px;
+      max-width:480px;
+    }
+    .tag-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px}
+    .tag{
+      padding:4px 10px; border-radius:999px;
+      background:rgba(15,23,42,.85);
+      border:1px solid rgba(148,163,184,.45);
+      font-size:11px; color:#e5e7eb;
+    }
+    .highlight-cards{
+      display:grid; grid-template-columns:1fr; gap:12px;
+    }
+    .small-card{
+      border-radius:var(--radius);
+      background:linear-gradient(180deg,rgba(15,23,42,.96),rgba(15,23,42,.85));
+      border:1px solid rgba(148,163,184,.35);
+      padding:14px;
+      box-shadow:var(--shadow-soft);
+      display:flex; gap:12px; align-items:flex-start;
+      font-size:13px;
+    }
+    .small-icon{
+      width:32px; height:32px; border-radius:12px;
+      display:grid; place-items:center;
+      background:rgba(15,23,42,1);
+      border:1px solid rgba(148,163,184,.5);
+      font-size:16px;
+    }
+    .small-card h3{margin:0 0 4px; font-size:15px}
+    .small-card p{margin:0; color:var(--muted)}
+
+    /* STATS */
+    .stats-row{
+      display:grid; grid-template-columns:repeat(4,1fr); gap:18px;
+    }
+    .stat{
+      border-radius:16px;
+      padding:14px 16px;
+      background:rgba(15,23,42,.95);
+      border:1px solid rgba(148,163,184,.35);
+    }
+    .stat-label{font-size:12px; color:var(--muted); margin-bottom:4px}
+    .stat-value{font-size:22px; font-weight:800}
+    .stat-sub{font-size:11px; color:#bbf7d0}
+
+    /* PERSONA / KİMLER İÇİN */
+    .persona-grid{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:18px;
+    }
+    .persona{
+      border-radius:16px;
+      background:rgba(15,23,42,.95);
+      border:1px solid rgba(148,163,184,.35);
+      padding:16px;
+      font-size:13px;
+    }
+    .persona-head{
+      display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;
+    }
+    .persona-tag{
+      font-size:11px; padding:3px 8px; border-radius:999px;
+      border:1px solid rgba(148,163,184,.55); color:var(--muted);
+    }
+    .persona h3{margin:0 0 4px; font-size:15px}
+    .persona ul{margin:8px 0 0; padding-left:18px; color:var(--muted); line-height:1.7}
+
+    /* WORKFLOWS */
+    .workflow-grid{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:18px;
+    }
+    .workflow{
+      border-radius:16px;
+      background:rgba(15,23,42,.96);
+      border:1px solid rgba(148,163,184,.35);
+      padding:16px;
+      font-size:13px;
+    }
+    .workflow h3{margin:0 0 6px; font-size:15px}
+    .workflow p{margin:0 0 10px; color:var(--muted)}
+    .workflow-steps{
+      margin:0; padding-left:18px; color:var(--muted); line-height:1.7;
+    }
+
+    /* HOW IT WORKS */
+    .steps{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:20px;
+    }
+    .step{
+      border-radius:16px;
+      background:rgba(15,23,42,.95);
+      border:1px solid rgba(148,163,184,.35);
+      padding:16px 16px 14px;
+    }
+    .step-header{
+      display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;
+    }
+    .step-index{
+      width:26px; height:26px; border-radius:999px;
+      display:grid; place-items:center;
+      background:rgba(15,23,42,1);
+      border:1px solid rgba(148,163,184,.6);
+      font-size:13px;
+    }
+    .step-title{font-size:15px; font-weight:600}
+    .step p{margin:0; color:var(--muted); font-size:13px}
+    .step span.badge-mini{
+      display:inline-flex; margin-top:8px;
+      padding:3px 8px; border-radius:999px;
+      font-size:11px; border:1px solid rgba(34,197,94,.45);
+      background:rgba(34,197,94,.12); color:#bbf7d0;
+    }
+
+    /* MINI FAQ PREVIEW */
+    .mini-faq-grid{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:18px;
+    }
+    .mini-faq{
+      border-radius:16px;
+      background:rgba(15,23,42,.96);
+      border:1px solid rgba(148,163,184,.35);
+      padding:14px;
+      font-size:13px;
+    }
+    .mini-faq h3{margin:0 0 6px; font-size:15px}
+    .mini-faq p{margin:0 0 10px; color:var(--muted)}
+    .mini-faq a{font-size:12px; color:#c7d2fe; text-decoration:underline}
+
+    /* FOOTER */
+    .footer{
+      padding:28px 0 24px;
+      border-top:1px solid rgba(255,255,255,.08);
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 980px){
+      .hero-grid{grid-template-columns:1fr}
+      .highlight-grid{grid-template-columns:1fr}
+      .stats-row{grid-template-columns:1fr 1fr}
+      .persona-grid{grid-template-columns:1fr}
+      .workflow-grid{grid-template-columns:1fr}
+      .steps{grid-template-columns:1fr}
+      .mini-faq-grid{grid-template-columns:1fr}
+      .nav-links{display:none}
+      .mobile-toggle{display:inline-flex}
+    }
+    @media (max-width: 640px){
+      .stats-row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html" aria-label="SEBA Akademi anasayfa">
+        <span class="logo" aria-hidden="true"></span>
+        <b>SEBA Akademi</b>
+      </a>
+      <div class="nav-links" role="navigation" aria-label="Birincil">
+        <a href="features.html" class="btn btn-outline">Özellikler</a>
+        <a href="catalog.html" class="btn btn-outline">Konu Kataloğu</a>
+        <a href="plan.html" class="btn btn-outline">Fiyatlar</a>
+        <a href="faq.html" class="btn btn-outline">SSS</a>
+        <a href="login.html" class="btn btn-primary">Giriş Yap</a>
+      </div>
+      <button class="btn mobile-toggle" id="mobileMenu">☰</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="badge">
+          <span>✦</span> 2026 YKS için akıllı çalışma arkadaşı
+        </span>
+        <h1>
+          TYT &amp; AYT için <span>kişi̇selleşti̇ri̇lmi̇ş</span> çalışma ve takip platformu
+        </h1>
+        <p>
+          SEBA Akademi; hangi konuyu, ne kadar süre, hangi sırayla çalışman gerektiğini gösteren;
+          video ders, test, deneme analizi ve kişisel notlarını aynı panelde birleştiren modern bir YKS hazırlık deneyimi sunar.
+        </p>
+        <div class="hero-cta">
+          <a href="login.html" class="btn btn-primary">Hemen Başla</a>
+          <button class="btn" id="exploreBtn">Konu Kataloğunu Gör</button>
+        </div>
+        <div class="hero-meta">
+          <span><i>📈</i> Konu bazlı ilerleme grafikleri ve net takibi</span>
+          <span><i>⏱</i> Günlük &amp; haftalık çalışma hedefleri</span>
+          <span><i>🔒</i> Sadece sana özel, kişisel çalışma alanı</span>
+        </div>
+      </div>
+
+      <div class="card hero-preview">
+        <div class="screen">
+          <div class="screen-grid">
+            <div class="screen-card">
+              <h4>Bugünkü Çalışma Özeti</h4>
+              <div class="pill-row">
+                <span class="pill">TYT Matematik · 3 video</span>
+                <span class="pill">Türkçe Paragraf · 2 test</span>
+              </div>
+              <div class="progress-wrap">
+                <small style="font-size:11px; color:var(--muted)">Günlük hedef tamamlama</small>
+                <div class="progress-bar">
+                  <div class="progress-inner"></div>
+                </div>
+              </div>
+              <div class="mini-card-row">
+                <div class="mini-card">
+                  <span class="mini-label">Bugünkü net değişimi</span>
+                  <span class="mini-value">+7 net</span>
+                </div>
+                <div class="mini-card">
+                  <span class="mini-label">Haftalık çalışma</span>
+                  <span class="mini-value">12 saat</span>
+                </div>
+                <div class="mini-card">
+                  <span class="mini-label">Çalışma serisi</span>
+                  <span class="mini-value">4 gün</span>
+                </div>
+              </div>
+            </div>
+            <div class="screen-card">
+              <h4>Hedef Paneli</h4>
+              <p style="margin:0; font-size:11px; color:var(--muted)">
+                TYT toplam hedef net: <b>85</b><br>
+                AYT sayısal hedef net: <b>65</b>
+              </p>
+              <div class="pill-row">
+                <span class="pill">Deneme analizi</span>
+                <span class="pill">Zayıf konular</span>
+                <span class="pill">Tekrar listesi</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-strip">
+          <span>🎯 <strong>Sana özel YKS yol haritası</strong> — Hedef netlerine, zamanına ve seviyene göre dinamik çalışma programı.</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HIGHLIGHT SECTION -->
+  <section class="section">
+    <div class="container">
+      <h2>Tek ekranda <span style="background:linear-gradient(90deg,var(--brand),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent;">plan, içerik ve takip</span></h2>
+      <p class="lead">
+        SEBA Akademi, “şimdi ne çalışmalıyım?” sorusunu ortadan kaldırmak için tasarlandı.
+        Dağınık PDF’ler, farklı uygulamalar ve defterler yerine; TYT &amp; AYT sürecini uçtan uca yöneten tek bir panel kullanırsın.
+      </p>
+
+      <div class="highlight-grid">
+        <div class="highlight-main">
+          <div class="highlight-overlay"></div>
+          <div class="highlight-content">
+            <div class="tag-row">
+              <span class="tag">📚 TYT &amp; AYT Konu Yol Haritası</span>
+              <span class="tag">🎧 Video + Soru Çözümü</span>
+              <span class="tag">🧪 Test + Deneme Analizi</span>
+            </div>
+            <h3 style="margin:0 0 10px;">Her ders için net bir rota</h3>
+            <p style="margin:0 0 14px; font-size:14px; color:var(--muted)">
+              Platform seni “rastgele konu” mantığından çıkarıp, mantıklı bloklara ayrılmış bir yol üzerinden ilerletir:
+              önce temel, sonra orta seviye, ardından ÖSYM tarzı sorular.
+            </p>
+            <ul style="padding-left:18px; margin:0; font-size:13px; color:var(--muted); line-height:1.8">
+              <li>Matematik, Türkçe, Fen, Sosyal ve AYT dersleri için ayrı konu sıraları</li>
+              <li>Her konu için kısa özet + uzun detaylı anlatım videoları</li>
+              <li>Video sonrası mini quiz ve konu tarama testleriyle hızlı geri bildirim</li>
+              <li>Zayıf kaldığın alanlar için otomatik “tekrar listesi” önerileri</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight-cards">
+          <article class="small-card">
+            <div class="small-icon">🧠</div>
+            <div>
+              <h3>Akıllı tekrar blokları</h3>
+              <p>Klasik “baştan sona her şeyi tekrar et” yerine; sistem, yanlış yaptığın soru tiplerine göre odaklanman gereken mikro konuları çıkarır.</p>
+            </div>
+          </article>
+          <article class="small-card">
+            <div class="small-icon">📊</div>
+            <div>
+              <h3>Net ve zaman analizi</h3>
+              <p>Çözdüğün testler ve denemeler; ders bazlı net, boş, süre ve doğruluk oranına dönüşerek grafikler üzerinde görünür hale gelir.</p>
+            </div>
+          </article>
+          <article class="small-card">
+            <div class="small-icon">📝</div>
+            <div>
+              <h3>Kişisel taktik defteri</h3>
+              <p>Beğendiğin sorular, önemli gördüğün formüller ve denemelerde fark ettiğin tuzaklar için ayrı bir “YKS taktik defteri” alanı sağlanır.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS + HOW IT WORKS -->
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div style="margin-bottom:22px">
+        <h2>Çalışmanı sayıya döken analiz paneli</h2>
+        <p class="lead">
+          YKS hazırlığında en sık yapılan hata, sadece “çok çalışmak” ama süreci ölçmemek.
+          SEBA Akademi, günlük süre, çözülen soru sayısı, net değişimi ve tekrar edilen konuları
+          rakamlara ve grafiklere dönüştürerek nerede olduğunu net şekilde gösterir.
+        </p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-label">Aylık çözülen soru</div>
+          <div class="stat-value">+3.200</div>
+          <div class="stat-sub">Hedefe göre günlük parçalanmış çalışma</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Video tamamlama oranı</div>
+          <div class="stat-value">%87</div>
+          <div class="stat-sub">Kısa + uzun konu anlatımı dengesi</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Aktif takip edilen ders</div>
+          <div class="stat-value">10+</div>
+          <div class="stat-sub">TYT &amp; AYT çekirdek müfredat</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Günlük hedefe uyum</div>
+          <div class="stat-value">4/5</div>
+          <div class="stat-sub">Son hafta ortalaması ile</div>
+        </div>
+      </div>
+
+      <div style="margin-top:32px">
+        <h2>Nasıl çalışır?</h2>
+        <p class="lead">
+          Platforma ilk girdiğinde birkaç basit soruya cevap verirsin: hedef puan türün, hedef netin,
+          haftalık ayırabileceğin süre ve mevcut seviyen. Geri kalan adımlar, senin için otomatik kurgulanır.
+        </p>
+        <div class="steps">
+          <article class="step">
+            <div class="step-header">
+              <div class="step-index">1</div>
+              <div class="step-title">Hedef ve profil tanımla</div>
+            </div>
+            <p>
+              Sayısal, sözel, eşit ağırlık veya dil; hangi puan türüne hazırlandığını, okul durumunu
+              ve hedeflediğin aralığı belirlersin. Sistem, seviyene uygun bir başlangıç noktası önerir.
+            </p>
+            <span class="badge-mini">🎯 Hedef net odaklı başlangıç</span>
+          </article>
+          <article class="step">
+            <div class="step-header">
+              <div class="step-index">2</div>
+              <div class="step-title">Plan &amp; içerik erişimi açılır</div>
+            </div>
+            <p>
+              Satın aldığın plana göre TYT ve AYT dersleri için konu listeleri, ders videoları,
+              testler ve deneme girdi alanları aktif hale gelir. Çalışma takvimin otomatik oluşturulur.
+            </p>
+            <span class="badge-mini">📚 TYT &amp; AYT içeriğini tek panelde gör</span>
+          </article>
+          <article class="step">
+            <div class="step-header">
+              <div class="step-index">3</div>
+              <div class="step-title">Analizle sürekli iyileştir</div>
+            </div>
+            <p>
+              Her test ve deneme sonrası netlerin güncellenir. Zayıf konuların listesi,
+              tekrar etmen gereken konular ve zaman yönetimi hataların ekranına yansır.
+            </p>
+            <span class="badge-mini">📈 Net artışını adım adım takip et</span>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KİMLER İÇİN UYGUN? -->
+  <section class="section">
+    <div class="container">
+      <h2>Bu platform kimler için ideal?</h2>
+      <p class="lead">
+        Her öğrencinin ritmi, hedefi ve alışkanlığı farklı. SEBA Akademi, hem tam zamanlı okul + dershane trafiğinin
+        içindeki öğrenciler için hem de daha bağımsız çalışanlar için esnek bir yapı sunar.
+      </p>
+
+      <div class="persona-grid">
+        <article class="persona">
+          <div class="persona-head">
+            <h3>Yoğun tempolu lise öğrencisi</h3>
+            <span class="persona-tag">Günde 1–2 saat</span>
+          </div>
+          <p style="margin:0; color:var(--muted); font-size:13px;">
+            Okul, deneme, kurs derken günü parçalı yaşayan ama yine de YKS’de sağlam bir temel
+            oluşturmak isteyen öğrenciler için.
+          </p>
+          <ul>
+            <li>Okul çıkışı kısa video + mini quiz blokları</li>
+            <li>Haftalık en az 1 tam deneme analizi</li>
+            <li>“Boşluk kaldı” hissini azaltan hazır plan</li>
+          </ul>
+        </article>
+
+        <article class="persona">
+          <div class="persona-head">
+            <h3>Mezun yılını verimli geçirmek isteyen</h3>
+            <span class="persona-tag">Günde 4–6 saat</span>
+          </div>
+          <p style="margin:0; color:var(--muted); font-size:13px;">
+            Tamamen YKS’ye odaklanmak için bir yılını ayırmış, düzenli fakat esnek kontrol mekanizmasına ihtiyaç duyan öğrenciler için.
+          </p>
+          <ul>
+            <li>Detaylı çalışma takvimi ve tekrar döngüleri</li>
+            <li>Denemeleri veri haline getiren analitik panel</li>
+            <li>Zayıf konulara özel ek video ve test önerileri</li>
+          </ul>
+        </article>
+
+        <article class="persona">
+          <div class="persona-head">
+            <h3>Kendi hızında ilerlemek isteyen</h3>
+            <span class="persona-tag">Esnek çalışma</span>
+          </div>
+          <p style="margin:0; color:var(--muted); font-size:13px;">
+            Her gün aynı saatte çalışamayan, bazı günler çok, bazı günler az çalışan ama
+            yine de ilerlemesini kaybetmek istemeyen öğrenciler için.
+          </p>
+          <ul>
+            <li>Günlük hedefler esnek ama toplamda dengeli</li>
+            <li>“Bugün az çalıştım” günlerinde hafif tekrar önerileri</li>
+            <li>Uzun aralardan sonra “kaldığın yerden devam et” modu</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÇALIŞMA SENARYOLARI -->
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <h2>Örnek çalışma senaryoları</h2>
+      <p class="lead">
+        SEBA Akademi’yi nasıl kullanacağın tamamen sana ait. Yine de başlangıçta yol gösterecek
+        bazı hazır çalışma senaryoları sunuyoruz. Aşağıda üç farklı kullanım tarzının özetini görebilirsin.
+      </p>
+
+      <div class="workflow-grid">
+        <article class="workflow">
+          <h3>“Sabahçı” çalışma düzeni</h3>
+          <p>
+            Sabah erken saatleri verimli kullanmak isteyen, günün geri kalanını daha hafif geçirmek isteyenler için.
+          </p>
+          <ol class="workflow-steps">
+            <li>07.00–07.45 · TYT Matematik kısa tekrar videosu + 10 soru test</li>
+            <li>07.45–08.15 · Türkçe paragraf hız çalışması</li>
+            <li>Akşam 20 dakika · Gün özetini panelden kontrol + notları düzenleme</li>
+          </ol>
+        </article>
+
+        <article class="workflow">
+          <h3>“Blok blok” ders odaklı gün</h3>
+          <p>
+            Her gün tek bir derse derinlemesine odaklanmak isteyen ve o dersin konularını blok halinde bitirmeyi sevenler için.
+          </p>
+          <ol class="workflow-steps">
+            <li>Gün 1 · Tamamen Matematik: 3 konu video + konu testleri</li>
+            <li>Gün 2 · Tamamen Türkçe: paragraf ve anlam çalışması</li>
+            <li>Gün 3 · Tamamen Fen: fizik–kimya–biyoloji dengeli dağılım</li>
+          </ol>
+        </article>
+
+        <article class="workflow">
+          <h3>“Soru ağırlıklı” pratik modu</h3>
+          <p>
+            Konu eksiği az, soru pratiği fazla yapmak isteyen; özellikle deneme ağırlıklı çalışan öğrenciler için.
+          </p>
+          <ol class="workflow-steps">
+            <li>Haftada en az 3 deneme sonucu panele işlenir</li>
+            <li>Yanlışlar otomatik olarak konu başlıklarına ayrılır</li>
+            <li>Panelde çıkan zayıf konular için hedefe yönelik video + test önerisi</li>
+          </ol>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- MINI FAQ PREVIEW -->
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <h2>Sık sorulanlardan kısa bir seçki</h2>
+      <p class="lead">
+        Daha detaylı SSS sayfasına geçmeden önce, öğrenciler ve veliler tarafından en çok sorulan
+        birkaç kritik sorunun kısa özetine göz atabilirsin.
+      </p>
+
+      <div class="mini-faq-grid">
+        <div class="mini-faq">
+          <h3>Plan satın almadan neleri görebilirim?</h3>
+          <p>
+            Örnek ders videoları, bazı konu testleri ve öğrencinin nasıl bir panel kullanacağını gösteren demo çalışma alanı ücretsiz olarak erişilebilir durumdadır.
+          </p>
+          <a href="faq.html">Detaylı oku →</a>
+        </div>
+        <div class="mini-faq">
+          <h3>Sadece TYT mi, yoksa TYT+AYT mi almalıyım?</h3>
+          <p>
+            Hedefin lisans programıysa genellikle TYT+AYT paketi önerilir. Ancak süre kısıtlıysa ilk etapta TYT Temel ile başlayıp daha sonra paketi yükseltebilirsin.
+          </p>
+          <a href="faq.html">Tüm plan sorularını gör →</a>
+        </div>
+        <div class="mini-faq">
+          <h3>Çalışma motivasyonumu nasıl koruyor?</h3>
+          <p>
+            Günlük hedefler, çalışma serisi, görsel grafikler ve not defteri; “bugün bir şey yaptım” hissini güçlendirerek motivasyonunu yüksek tutmana yardımcı olur.
+          </p>
+          <a href="faq.html">Motivasyonla ilgili sorular →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap">
+      <small>© <span id="year"></span> AscendEdu. Tüm hakları saklıdır.</small>
+      <div style="display:flex; gap:10px; flex-wrap:wrap">
+        <a href="features.html">Özellikler</a>
+        <a href="catalog.html">Konu Kataloğu</a>
+        <a href="plan.html">Fiyatlar</a>
+        <a href="faq.html">SSS</a>
+        <a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Yukarı ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const $ = (s, r=document) => r.querySelector(s);
+
+    // Yıl
+    $('#year').textContent = new Date().getFullYear();
+
+    // Mobile menu (basit)
+    $('#mobileMenu').addEventListener('click', ()=>{
+      const links = document.querySelector('.nav-links');
+      if(!links) return;
+      const visible = getComputedStyle(links).display !== 'none';
+      links.style.display = visible ? 'none' : 'flex';
+      links.style.flexDirection = 'column';
+      links.style.background = 'rgba(11,18,32,.98)';
+      links.style.position = 'absolute';
+      links.style.right = '4%';
+      links.style.top = '76px';
+      links.style.padding = '12px';
+      links.style.border = '1px solid rgba(255,255,255,.08)';
+      links.style.borderRadius = '12px';
+      links.style.zIndex = '60';
+    });
+
+    // Kataloğa git
+    $('#exploreBtn').addEventListener('click', ()=>{
+      window.location.href = 'catalog.html';
+    });
+  </script>
+</body>
+</html>

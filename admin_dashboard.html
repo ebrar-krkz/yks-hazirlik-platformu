@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yönetici Paneli | AscendEdu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0b1220;--panel:#0f172a;--glass:rgba(255,255,255,.06);--muted:#94a3b8;--text:#e2e8f0;--brand:#3b82f6;--brand2:#7c3aed}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text)}
+    .container{width:min(1200px,94%);margin-inline:auto}
+    .nav{
+      position:sticky;top:0;
+      background:linear-gradient(to bottom,rgba(11,18,32,.95),rgba(11,18,32,.6));
+      border-bottom:1px solid rgba(255,255,255,.08)
+    }
+    .nav-inner{height:64px;display:flex;justify-content:space-between;align-items:center}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px 0}
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;padding:16px
+    }
+    input,select,textarea,button{font:inherit}
+    input,select,textarea{
+      width:100%;padding:10px 12px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);color:inherit
+    }
+    .btn{
+      padding:10px 14px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.08);
+      background:var(--glass);font-weight:600;cursor:pointer
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--brand),var(--brand2));
+      border-color:transparent
+    }
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}
+    .muted{color:var(--muted)}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <b>AscendEdu • Yönetici</b>
+      <div style="display:flex;gap:8px;align-items:center">
+        <a class="btn" href="index.html">Site</a>
+        <button class="btn" id="logout">Çıkış</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="grid">
+      <section class="card">
+        <h2>Video Ekle</h2>
+        <p class="muted">Başlık, ders ve kategori ile yeni video kaydı (demo olarak tarayıcıda tutulur).</p>
+        <div style="display:grid;gap:10px">
+          <input id="vTitle" placeholder="Başlık">
+          <input id="vSubject" placeholder="Ders / Konu">
+          <select id="vCat">
+            <option value="TYT">TYT</option>
+            <option value="AYT">AYT</option>
+          </select>
+          <input id="vUrl" placeholder="Video URL (YouTube vb.)">
+          <button class="btn btn-primary" id="addVideo">Ekle</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Test Oluştur</h2>
+        <p class="muted">Soru–şık–doğru cevapları JSON olarak saklanır (demo).</p>
+        <div style="display:grid;gap:10px">
+          <input id="tTitle" placeholder="Test Başlığı">
+          <textarea id="tJson" rows="6" placeholder='[{"q":"Soru?","a":["A","B","C","D"],"c":0}]'></textarea>
+          <button class="btn btn-primary" id="addTest">Testi Kaydet</button>
+        </div>
+      </section>
+
+      <section class="card" style="grid-column:1/-1">
+        <h2>İçerikler</h2>
+        <table>
+          <thead>
+            <tr><th>Tür</th><th>Başlık</th><th>Etiket</th><th>Detay</th></tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </section>
+
+      <section class="card" style="grid-column:1/-1">
+        <h2>Öğrenci Raporları</h2>
+        <p class="muted">Demo: Yerel sonuçlar listelenir.</p>
+        <table>
+          <thead><tr><th>Öğrenci</th><th>Test</th><th>Skor</th></tr></thead>
+          <tbody id="rep"></tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const guard=()=>{
+      const logged=localStorage.getItem('loggedIn')==='1';
+      const role=localStorage.getItem('role');
+      if(!logged||role!=='admin'){
+        alert('Yönetici girişi gerekli.');
+        location.href='login.html';
+      }
+    };
+    guard();
+
+    const $=(s)=>document.querySelector(s);
+    const rows=$('#rows');
+    const rep=$('#rep');
+    const videos=JSON.parse(localStorage.getItem('videos')||'[]');
+    const tests=JSON.parse(localStorage.getItem('tests')||'[]');
+
+    function render(){
+      rows.innerHTML = '';
+      videos.forEach(v=>{
+        rows.innerHTML += `<tr><td>🎥 Video</td><td>${v.title}</td><td>${v.cat}</td><td>${v.subject}</td></tr>`;
+      });
+      tests.forEach(t=>{
+        rows.innerHTML += `<tr><td>🧪 Test</td><td>${t.title}</td><td>${t.items.length} soru</td><td>JSON</td></tr>`;
+      });
+      const results=JSON.parse(localStorage.getItem('results')||'[]');
+      rep.innerHTML = results.map(r=>`
+        <tr><td>${r.user||'student@demo'}</td><td>${r.test||'-'}</td><td>${r.score}%</td></tr>
+      `).join('');
+    }
+    render();
+
+    $('#addVideo').addEventListener('click',()=>{
+      const v={
+        title:$('#vTitle').value.trim(),
+        subject:$('#vSubject').value.trim(),
+        cat:$('#vCat').value,
+        url:$('#vUrl').value.trim()
+      };
+      if(!v.title||!v.subject){alert('Başlık ve konu gerekli.');return}
+      videos.push(v);
+      localStorage.setItem('videos',JSON.stringify(videos));
+      render();
+      alert('Video eklendi.');
+    });
+
+    $('#addTest').addEventListener('click',()=>{
+      try{
+        const items=JSON.parse($('#tJson').value||'[]');
+        const t={title:$('#tTitle').value.trim()||`Test ${tests.length+1}`, items};
+        tests.push(t);
+        localStorage.setItem('tests',JSON.stringify(tests));
+        render();
+        alert('Test kaydedildi.');
+      }catch(e){
+        alert('JSON formatı hatalı.');
+      }
+    });
+
+    $('#logout').addEventListener('click',()=>{
+      localStorage.removeItem('loggedIn');
+      localStorage.removeItem('role');
+      location.href='index.html';
+    });
+  </script>
+</body>
+</html>
