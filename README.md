@@ -224,15 +224,10 @@ Buraya aşağıdaki sayfaların ekran görüntüleri eklenebilir:
 
 ## 👨‍💻 Geliştirici
 
-**Ebrar Karakuzu**
-
-Yazılım Mühendisliği Öğrencisi
-
-Kocaeli Sağlık ve Teknoloji Üniversitesi
+**Ebrar İkbal Karakuzu**
 
 GitHub: https://github.com/ebrar-krkz
-
-LinkedIn: [www.linkedin.com/in/ebrar-karakuzu](http://www.linkedin.com/in/ebrar-karakuzu)
+LinkedIn: [Ebrar İkbal Karakuzu](https://www.linkedin.com/in/ebrar-ikbal-karakuzu-91a937299)
 
 ---
 
