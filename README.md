@@ -227,7 +227,7 @@ Buraya aşağıdaki sayfaların ekran görüntüleri eklenebilir:
 **Ebrar İkbal Karakuzu**
 
 GitHub: https://github.com/ebrar-krkz
-LinkedIn: [Ebrar İkbal Karakuzu](https://www.linkedin.com/in/ebrar-ikbal-karakuzu-91a937299)
+- LinkedIn: [Ebrar İkbal Karakuzu](https://www.linkedin.com/in/ebrar-ikbal-karakuzu-91a937299)
 
 ---
 
